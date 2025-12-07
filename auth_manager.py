@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from managers.auth_manager.password_utils import hash_password, verify_password
+from utils.logger_util import Logger
 
 
 class AuthManager:
@@ -17,6 +18,10 @@ class AuthManager:
     - Verify passwords during login
     - Integrate with any user storage backend
     """
+
+    def __init__(self) -> None:
+        """Initialize AuthManager."""
+        self.logger = Logger(name=__class__.__name__)
 
     def hash_password(self, plain: str) -> str:
         """Hash a plaintext password for secure storage.
