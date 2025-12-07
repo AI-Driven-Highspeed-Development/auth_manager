@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-from managers.auth_manager.password_utils import hash_password, verify_password
+import bcrypt
+
 from utils.logger_util import Logger
 
 
@@ -25,19 +26,10 @@ class AuthManager:
 
     def hash_password(self, plain: str) -> str:
         """Hash a plaintext password for secure storage.
-
-        Args:
-            plain: The plaintext password.
-
-        Returns:
-            The bcrypt hash as a string.
-
-        Example:
-            auth = AuthManager()
-            hashed = auth.hash_password("my_secret_password")
-            # Store `hashed` in your database
         """
-        return hash_password(plain)
+        salt = bcrypt.gensalt()
+        hashed = bcrypt.hashpw(plain.encode("utf-8"), salt)
+        return hashed.decode("utf-8")
 
     def verify_password(self, plain: str, hashed: str) -> bool:
         """Verify a plaintext password against a stored hash.
@@ -45,13 +37,8 @@ class AuthManager:
         Args:
             plain: The plaintext password to verify.
             hashed: The bcrypt hash from storage.
-
-        Returns:
-            True if password matches, False otherwise.
-
-        Example:
-            auth = AuthManager()
-            if auth.verify_password(user_input, stored_hash):
-                print("Login successful!")
         """
-        return verify_password(plain, hashed)
+        try:
+            return bcrypt.checkpw(plain.encode("utf-8"), hashed.encode("utf-8"))
+        except (ValueError, TypeError):
+            return False
