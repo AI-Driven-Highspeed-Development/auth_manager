@@ -1,0 +1,19 @@
+[project]
+name = "auth-manager"
+version = "0.0.1"
+description = "ADHD Framework manager: auth_manager"
+requires-python = ">=3.11"
+dependencies = [
+    "logger-util",
+    "bcrypt>=4.0.0",
+]
+
+[tool.adhd]
+type = "manager"
+layer = "runtime"
+
+[tool.uv.sources]
+logger-util = { workspace = true }
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
